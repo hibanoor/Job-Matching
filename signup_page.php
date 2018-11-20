@@ -67,7 +67,6 @@
           <a href="#requirements">Requirements</a>
           <a href="recommendation.php">Recommendation</a>
           <a href="#prediction">Prediction</a>
-          <a href="#upload">Upload</a>
           <a style="float:right;" href="loginpage.php">Login / Sign up</a>
         </div>
 
@@ -92,6 +91,15 @@
 
            <label for="psw-repeat"><b>Repeat Password</b></label>
            <input type="password" id="confirm_password"  placeholder="Repeat Password" name="psw-repeat" required >
+
+           <label for="address"><b>Address</b></label>
+           <input type="text" placeholder="Enter Address" name="address"  required>
+
+           <label for="skills"><b>Skills</b></label>
+           <input type="text" placeholder="Enter your Skills" name="skills"  required>
+
+           <label for="experience"><b>Years of Experience</b></label>
+           <input type="text" placeholder="Enter years of experience" name="experience"  required>
 
            <label>
             <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me

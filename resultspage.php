@@ -112,7 +112,6 @@ $conn->close();
       <a href="#requirements">Requirements</a>
       <a href="recommendation.php">Recommendation</a>
       <a href="#prediction">Prediction</a>
-      <a href="#upload">Upload</a>
       <a style="float:right;" href="loginpage.php">Login / Sign up</a>
     </div>
 

@@ -54,7 +54,6 @@
         <a href="#requirements">Requirements</a>
         <a href="recommendation.php">Recommendation</a>
         <a href="#prediction">Prediction</a>
- 	<a href="#upload">Upload</a>
         <?php 
       if(isset($_SESSION['name'])){?>
 

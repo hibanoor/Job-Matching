@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>Home</title>   
+ <title>Home</title>
  <style type="text/css">
  #container { margin:0 auto; width:100%; }
  #menu { float:top; background-color: #FCDCBE; overflow: auto; white-space: nowrap;}
@@ -30,7 +30,7 @@ print_r($_SESSION);*/
 ?>
 
 <body style="background-color:#FFFFFF; background-repeat: round">
-  
+
  <div id="container">
   <div id="menu">
     <a href="index.php">Home</a>
@@ -38,23 +38,22 @@ print_r($_SESSION);*/
     <a href="#requirements">Requirements</a>
     <a href="recommendation.php">Recommendation</a>
     <a href="#prediction">Prediction</a>
-    <a href="test.php?update=true">Update</a>
-    <?php 
-    if(isset($_SESSION['name'])){?>
+    <?php
+if (isset($_SESSION['name'])) {?>
 
     <a style="float:right;" href="logout.php">Logout</a>
     <a style="float:right;" href="loginpage.php">Welcome  <?php echo $_SESSION['name'] ?></a>
-    <?php }else{?>
+    <?php } else {?>
     <a style="float:right;" href="loginpage.php">Login / Sign up</a>
     <?php }
-    ?>
+?>
   </div>
 
-  <?php 
-  if(isset($_GET['login'])){ 
+  <?php
+if (isset($_GET['login'])) {
     echo '<h2 style="text-align:center; color:#642950">Login Successful!</h2>';
-  }
-  ?>
+}
+?>
 
   <div id="content">
    <h1 align="center" style="font-size:300%;">DATA PROFESSIONAL JOBS</h1>

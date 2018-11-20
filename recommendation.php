@@ -58,7 +58,6 @@
             <a href="#requirements">Requirements</a>
             <a href="recommendation.php">Recommendation</a>
             <a href="#prediction">Prediction</a>
-            <a href="test.php?update=true">Update</a>
             <?php 
             if(isset($_SESSION['name'])){?>
 

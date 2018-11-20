@@ -30,8 +30,8 @@ if($count > 0){
 	header('Location: '.'http://127.0.0.1/edsa-IPPI/hiba/signup_page.php?email=true');
 }else{
 
-	$sql = "INSERT INTO users(`name`, `email`, `password`) 
-	VALUES ('$name', '$email', '$password')";
+	$sql = "INSERT INTO users(`name`, `email`, `password`, `address`, `skills`, `experience`) 
+	VALUES ('$name', '$email', '$password', '$address', '$skills', '$experience')";
 
 
 	if ($conn->query($sql) === TRUE) {
