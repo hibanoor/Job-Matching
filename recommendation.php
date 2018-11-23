@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Recommendation</title>   
+  <title>Recommendation</title>
   <style type="text/css">
   #container { margin:0 auto; width:100%; }
   #menu { float:top; background-color: #FCDCBE; overflow: auto; white-space: nowrap;}
@@ -58,15 +58,15 @@
             <a href="#requirements">Requirements</a>
             <a href="recommendation.php">Recommendation</a>
             <a href="#prediction">Prediction</a>
-            <?php 
-            if(isset($_SESSION['name'])){?>
+            <?php
+if (isset($_SESSION['name'])) {?>
 
               <a style="float:right;" href="logout.php">Logout</a>
               <a style="float:right;" href="loginpage.php">Welcome<?php echo $_SESSION['name'] ?></a>
-            <?php }else{?>
+            <?php } else {?>
               <a style="float:right;" href="loginpage.php">Login / Signup</a>
             <?php }
-            ?>
+?>
           </div>
 
           <center><h2><font color="#0E276A">Browse Jobs</font></h2></center>
@@ -80,16 +80,16 @@
                </div>
 
                <div id="rightContainer">
-                 <select name="preference" style = "width: 100%; padding: 8px" placeholder="Preference">
+                 <select name="skill_preference" style = "width: 100%; padding: 8px" placeholder="Preference">
                   <option value="" disabled selected hidden>Preference</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
-                  <option value="3">3</option> 
-                  <option value="4">4</option>  
-                </select> 
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
               </div>
             </center>
-            
+
             <br><br>
             <h2></h2>
 
@@ -103,14 +103,14 @@
               <option value="" disabled selected hidden>Preference</option>
               <option value="1">1</option>
               <option value="2">2</option>
-              <option value="3">3</option> 
+              <option value="3">3</option>
 	      <option value="4">4</option>
 	      <option value="5">5</option>
-	      <option value="6">6</option> 
-            </select> 
+	      <option value="6">6</option>
+            </select>
           </div>
 	  </center>
-         
+
           <br><br>
           <h2></h2>
 
@@ -124,14 +124,14 @@
               <option value="" disabled selected hidden>Preference</option>
               <option value="1">1</option>
               <option value="2">2</option>
-              <option value="3">3</option> 
+              <option value="3">3</option>
 	      <option value="4">4</option>
 	      <option value="5">5</option>
 	      <option value="6">6</option>
-            </select> 
+            </select>
           </div>
 	  </center>
-         
+
           <br><br>
           <h2></h2>-->
 
@@ -142,13 +142,13 @@
            </div>
 
            <div id="rightContainer">
-             <select name="preference" style = "width: 100%; padding: 8px" placeholder="Preference">
+             <select name="salary_preference" style = "width: 100%; padding: 8px" placeholder="Preference">
               <option value="" disabled selected hidden>Preference</option>
               <option value="1">1</option>
               <option value="2">2</option>
-              <option value="3">3</option> 
+              <option value="3">3</option>
               <option value="4">4</option>
-            </select> 
+            </select>
           </div>
         </center>
 
@@ -178,13 +178,13 @@
         </div>
 
         <div id="rightContainer">
-         <select name="preference" style = "width: 100%; padding: 8px" placeholder="Preference">
+         <select name="location_preference" style = "width: 100%; padding: 8px" placeholder="Preference">
           <option value="" disabled selected hidden>Preference</option>
           <option value="1">1</option>
           <option value="2">2</option>
-          <option value="3">3</option> 
-          <option value="4">4</option> 
-        </select> 
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
       </div>
     </center>
 
@@ -194,24 +194,21 @@
     <center>
      <div id="leftContainer">
       <select name="experience" style = "width: 220%; padding: 8px" placeholder="Years of experience">
-        <option value="" disabled selected hidden>Years of experience</option>
-        <option value="0">0</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
+        <option value="" disabled selected hidden>Years of Experience</option>
+        <option value="3">0 to 3 Years</option>
+        <option value="5">3 to 5 Years</option>
+        <option value="6">More than 5 Years</option>
       </select>
     </div>
 
     <div id="rightContainer">
-     <select name="preference" style = "width: 100%; padding: 8px" placeholder="Preference">
+     <select name="exp_preference" style = "width: 100%; padding: 8px" placeholder="Preference">
       <option value="" disabled selected hidden>Preference</option>
       <option value="1">1</option>
       <option value="2">2</option>
-      <option value="3">3</option> 
-      <option value="4">4</option> 
-    </select> 
+      <option value="3">3</option>
+      <option value="4">4</option>
+    </select>
   </div>
 </center>
 
@@ -224,7 +221,7 @@
  <div>
    <input type="submit" value = "Search" style = "width: 35%; padding: 10px">
    <input type="reset" value = "Reset" style = "background-color: #C0392B; color: white; width: 35%; padding: 10px">
-   <br><br>    
+   <br><br>
  </div>
 </center>
 

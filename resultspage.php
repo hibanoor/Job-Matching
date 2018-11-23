@@ -1,7 +1,8 @@
+<?php require_once 'functions.php'; ?>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Search Results</title>   
+  <title>Search Results</title>
   <style type="text/css">
   #container { margin:0 auto; width:100%; }
   #menu { float:top; background-color: #FCDCBE; overflow: auto; white-space: nowrap;}
@@ -42,66 +43,116 @@
            #signup { float: right; }
 
            img { width:100%;}
+           th,
+td {
+
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ccc; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+padding-right: 0; }
+td{
+  vertical-align: top;
+}
          </style>
        </head>
 
        <?php
-       session_start();
-       $servername = "localhost";
-       $username = "root";
-       $password = "";
-       $database = "ippi_project";
-// Create connection 
-       $conn = new mysqli($servername, $username, $password, $database);
+session_start();
+$servername = "localhost";
+$username   = "root";
+$password   = "";
+$database   = "ippi_project";
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
 
 // Check connection
-       if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-      } 
-      /*echo "Connected successfully";*/
-
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+/*echo "Connected successfully";*/
 
 /*  echo '<pre>';
 print_r($_POST);
 die();*/
 
+if (isset($_POST['skills'])) {
+    $skills = $_POST['skills'];
+    $salary = $_POST['salary'];
+    if (!empty($_POST['location'])) {
+        $location = $_POST['location'];
+    } else {
+        $location = '';
+    }
+    $experience = (isset($_POST['experience'])) ? intval($_POST['experience']) : 0;
 
-if(isset($_POST['skills'])){
-  $skills=$_POST['skills'];
-  $salary=$_POST['salary'];
-  if(!empty($_POST['location'])){
-    $location=$_POST['location'];
-  }else{
-    $location='';
-  }
-  
-  
+    $preferences    = array();
+    $preferences[0] = (isset($_POST['skill_preference'])) ? intval($_POST['skill_preference']) : 0;
+    $preferences[1] = (isset($_POST['salary_preference'])) ? intval($_POST['salary_preference']) : 0;
+    $preferences[2] = (isset($_POST['location_preference'])) ? intval($_POST['location_preference']) : 0;
+    $preferences[3] = (isset($_POST['exp_preference'])) ? intval($_POST['exp_preference']) : 0;
 
+    $order = array();
+    for ($i = count($preferences) - 1; $i >= 0; $i--) {
+        $max_index = array_keys($preferences, max($preferences));
+        $var       = $max_index[0];
+        $order[]   = $var;
+        unset($preferences[$var]);
+    }
+    // $columns = ['newline()', 'find_by_salary($data,$salary)', 'find_by_locataion($data,$location)', 'newline()'];
+    /*
+    We want to sort the results of the query  following tis to be sorted by the
+    highest prefrence in the list here
+
+     */
 
 /* echo "SELECT * FROM jobs WHERE (job_title LIKE '%$skills%' OR requirements LIKE '%$skills%' OR job_description LIKE '%$skills%') AND (salary LIKE '%$salary%' AND locations LIKE '%$location%')";
- die(); */
+die(); */
 
- /* $sql = "SELECT * FROM jobs WHERE skills = '$skills' OR skills2 = '$skills2' OR skills3 = '$skills3' AND salary='$salary' AND location='$location' AND experience='$experience'";   */ 
+    /* $sql = "SELECT * FROM jobs WHERE skills = '$skills' OR skills2 = '$skills2' OR skills3 = '$skills3' AND salary='$salary' AND location='$location' AND experience='$experience'";   */
 
- /*$sql = "SELECT * FROM jobs WHERE (skills LIKE '%$skills%' OR skills2 LIKE '%$skills%' OR skills3 LIKE '%$skills%') AND (salary LIKE '%$salary%' AND location LIKE '%$location%' AND experience LIKE '%$experience%')";*/
+    /*$sql = "SELECT * FROM jobs WHERE (skills LIKE '%$skills%' OR skills2 LIKE '%$skills%' OR skills3 LIKE '%$skills%') AND (salary LIKE '%$salary%' AND location LIKE '%$location%' AND experience LIKE '%$experience%')";*/
 
- $sql = "SELECT * FROM jobs WHERE (job_title LIKE '%$skills%' OR requirements LIKE '%$skills%' OR job_description LIKE '%$skills%') AND (salary LIKE '%$salary%' AND locations LIKE '%$location%')";   
- $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
- $count = mysqli_num_rows($result);
+    $sql        = "SELECT * FROM jobstreet WHERE (job_title LIKE '%$skills%' OR /*requirements LIKE '%$skills%' OR job_*/ description LIKE '%$skills%') ";
+    $result     = mysqli_query($conn, $sql) or die(mysqli_error($conn));
+    $count      = mysqli_num_rows($result);
+    $city_found = false;
+    $data       = array();
+    if ($count >= 0) {
+        $index = -1;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $data[] = $row;
+        }
+    }
+    foreach ($order as $ind) {
+        if ($ind === 1) {
+            if (!empty($salary)) {
+                $data = find_by_salary($data, $salary);
+            }
 
- if ($count >= 0){
-   $post = array();
-   while($row = mysqli_fetch_assoc($result))
-   {
-    $data[] = $row;
-  }
+        } elseif ($ind === 2) {
+            if (!empty($location)) {
+                $data = find_by_location($data, $location);
+            }
+
+        } elseif ($ind === 3) {
+            if ($experience !== 0) {
+                find_by_exp($data, $experience);
+            }
+        } elseif ($ind === 0) {
+            ;
+        }
+
+    }
+
 }
-}
-
-
-
 
 $conn->close();
+
 ?>
 
 <body style="background-color:#FFFFFF; background-repeat: round">
@@ -118,15 +169,15 @@ $conn->close();
     <center><h2><font color="#0E276A">Recommended Jobs</font></h2></center>
 
     <center>
-     <?php 
+     <?php
 
-     if(!empty($data)){?>
-       <table style="width:100%; margin-top: 40px; border:3px solid #f1f1f1" class="table" cellspacing="1" cellspacing="20" border="1">
+if (!empty($data)) {
+    ?>
+       <table style="width:100%; margin-top: 40px;  class="table" cellspacing="1" cellspacing="20" >
         <thead>
           <tr>
             <th width="25%">Title</th>
             <th width="25%">Description</th>
-            <th width="25%">Requirements</th>
             <th width="25%">Salary</th>
             <th width="25%">Location</th>
           </tr>
@@ -134,32 +185,31 @@ $conn->close();
 
         <tbody>
 
-          <?php 
-          foreach ($data as $key => $d) {?>
+          <?php
+foreach ($data as $key => $d) { ?>
             <tr>
              <td> <?php echo $d['job_title'] ?> </td>
-             <td> <?php echo $d['job_description'] ?> </td>
-             <td> <?php echo $d['requirements']?> </td>
-             <td> <?php echo $d['Salary']?> </td>
-             <td> <?php echo $d['locations']?> </td>
-           </tr> 
-         <?php   }
-         ?>
+             <td> <?php echo $d['description'] ?> </td>
+             <td> <?php echo ($d['salary'] !== 'null') ? $d['salary'] : "Not Specified"; ?> </td>
+             <td> <?php echo $d['location'] ?> </td>
+           </tr>
+         <?php }
+    ?>
 
 
 
        </tbody>
      </table>
 
-     <?php 
-   }else{
-     ?>
-     <table style="width:100%; margin-top: 40px; border:3px solid #f1f1f1" class="table" cellspacing="1" cellspacing="20" border="1">
+     <?php
+} else {
+    ?>
+     <table style="width:100%; margin-top: 40px;" class="table" cellspacing="1" cellspacing="20" >
       <thead>
         <tr>
           <th>Title</th>
           <th>Description</th>
-          <th>Requirements</th> 
+          <th>Requirements</th>
           <th>Location</th>
           <th>Salary</th>
         </tr>
@@ -173,9 +223,9 @@ $conn->close();
        </tbody>
      </table>
 
-     <?php 
-   }
-   ?>
+     <?php
+}
+?>
  </center>
 </div>
 </body>

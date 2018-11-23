@@ -99,7 +99,13 @@
            <input type="text" placeholder="Enter your Skills" name="skills"  required>
 
            <label for="experience"><b>Years of Experience</b></label>
-           <input type="text" placeholder="Enter years of experience" name="experience"  required>
+           <!-- <input type="text" placeholder="Enter years of experience" name="experience"  required> -->
+           <select name="experience" style = "width: 250%; padding: 8px" placeholder="Enter years of experience" required> 
+             <option value="" disabled selected hidden>Experience</option>
+             <option value="1">0 to 3 Years</option>
+             <option value="2">3 to 5 Years</option>
+             <option value="3">More than 5 Years</option>
+           </select>
 
            <label>
             <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
