@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>Signup Page</title>   
+ <title>Signup Page</title>
  <style type="text/css">
  #container { margin:0 auto; width:100%; }
  #menu { float:top; background-color: #FCDCBE; overflow: auto; white-space: nowrap;}
@@ -78,12 +78,12 @@
            <p>Please fill in this form to create an account.</p>
            <hr>
 
-           <center><?php if(isset($_GET['email'])){ echo "<h4 style='color: #C0392B;'>This email already exists!</h4>";}?></center>
+           <center><?php if (isset($_GET['email'])) {echo "<h4 style='color: #C0392B;'>This email already exists!</h4>";} ?></center>
 
            <label for="name"><b>Name</b></label>
            <input type="text" placeholder="Enter Name" name="name"  required>
 
-           <label for="email"><b>Email</b><?php if(isset($_GET['email'])){ echo "<span  style='color: #ff0000cc;font-size: 12px;float: right;'>This email already exists.</span>";}?></label>
+           <label for="email"><b>Email</b><?php if (isset($_GET['email'])) {echo "<span  style='color: #ff0000cc;font-size: 12px;float: right;'>This email already exists.</span>";} ?></label>
            <input type="text" placeholder="Enter Email" name="email" id="email"  required>
 
            <label for="psw"><b>Password</b><span  style='color: #ff0000cc;font-size: 12px;float: right;' id="divCheckPasswordMatch"></span></label>
@@ -94,26 +94,17 @@
 
            <label for="address"><b>Address</b></label>
            <input type="text" placeholder="Enter Address" name="address"  required>
+           <div id="candidate">
 
-           <label for="skills"><b>Skills</b></label>
-           <input type="text" placeholder="Enter your Skills" name="skills"  required>
-
-           <label for="experience"><b>Years of Experience</b></label>
-           <!-- <input type="text" placeholder="Enter years of experience" name="experience"  required> -->
-           <select name="experience" style = "width: 250%; padding: 8px" placeholder="Enter years of experience" required> 
-             <option value="" disabled selected hidden>Experience</option>
-             <option value="1">0 to 3 Years</option>
-             <option value="2">3 to 5 Years</option>
-             <option value="3">More than 5 Years</option>
-           </select>
+          </div>
 
            <label>
-            <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+            <input type="checkbox"  name="employer" style="margin-bottom:15px"> I want to find a job
           </label>
 
-          <label> 
+          <label>
             <span id="login">Already a member? <a href="loginpage.php">Log In</a></span>
-          </label>	      
+          </label>
 
           <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
 
@@ -127,7 +118,7 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
-      
+
       <script type="text/javascript">
       $(function () {
         $("#submit").click(function () {
@@ -146,7 +137,7 @@
     <script>
       $('#submit').click(function(){
         var emailVal = $('#email').val();
-        $.ajax({ 
+        $.ajax({
           url: 'checkemail.php',
           data: {"email": emailVal},
           type: 'POST',
@@ -160,6 +151,71 @@
         });
       });
     </script>
+    <script>
+    let checkbox = document.querySelector("input[name=employer]");
+    checkbox.checked =false;
+    checkbox.addEventListener( 'change', function() {
+      if(this.checked) {
+        let div = document.getElementById('candidate');  
+        let labelSkill = document.createElement(`label`);
+        labelSkill.setAttribute(`for`,`Skills`);
+        let bold = document.createElement(`b`);
+        bold.innerHTML = `Skills`;
+        labelSkill.style.display = 'block';
+
+        labelSkill.appendChild(bold);
+        
+        let inputSkill = document.createElement(`input`);
+        inputSkill.setAttribute(`type`,`text`);
+        inputSkill.setAttribute(`placeholder`,`Enter Your Skills`);
+        inputSkill.setAttribute(`name`,`skills`);
+        inputSkill.setAttribute(`required`,`required`);
+                
+        div.appendChild(labelSkill);
+        div.appendChild(inputSkill);
+        
+        let labelExp   = document.createElement(`label`);;
+        labelExp.setAttribute(`for`,`Experience`);
+        labelExp.style.display = 'block';
+        let bold2 = document.createElement(`b`);
+        bold2.innerHTML = `Experience`;
+        
+        labelExp.appendChild(bold2);
+        div.appendChild(labelExp);
+
+        var selectList = document.createElement("select");
+        
+        selectList.setAttribute(`name`,`experience`);
+        selectList.setAttribute(`placeholder`,`Enter years of experience`);
+        selectList.setAttribute(`required`,`required`);
+        selectList.style.padding = `8px`;
+        selectList.style.width = `100%`;
+        selectList.setAttribute(`required`,`required`);
+
+        div.appendChild(selectList);
+
+        let array      = [`Experience`,`0 to 3 Years`,`3 to 5 Years`,`More than 5 Years`];
+        let array_vals = [``,`1`,`2`,`3`];
+        for (var i = 0; i < array.length; i++) {
+          var option   = document.createElement(`option`);
+          option.value = array_vals[i];
+          option.text  = array[i];
+          if(i === 0){
+            option.selected=  `selected`;
+            option.setAttribute(`hidden`,true);
+            option.setAttribute(`disabled`,true);
+          }
+          selectList.appendChild(option);
+        }
+      } else {
+        let div = document.getElementById('candidate');  
+        while(div.firstChild){
+          div.removeChild(div.firstChild);
+        }
+      }
+    });
+
+</script>
 
   </body>
 

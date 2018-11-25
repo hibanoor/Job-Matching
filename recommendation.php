@@ -1,3 +1,7 @@
+<?php
+session_start();
+require_once 'config.php';
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -59,17 +63,30 @@
             <a href="recommendation.php">Recommendation</a>
             <a href="#prediction">Prediction</a>
             <?php
-if (isset($_SESSION['name'])) {?>
-
-              <a style="float:right;" href="logout.php">Logout</a>
-              <a style="float:right;" href="loginpage.php">Welcome<?php echo $_SESSION['name'] ?></a>
-            <?php } else {?>
-              <a style="float:right;" href="loginpage.php">Login / Signup</a>
-            <?php }
+            $employer = false;
+if (isset($_SESSION['name'])) {
+    $email = $_SESSION['email'];
+    $sql   = "SELECT * FROM users WHERE email = '$email'";
+    $sql .= " LIMIT 1";
+    $_user = mysqli_query($conn, $sql)->fetch_all(MYSQLI_ASSOC) or die(mysqli_error($conn));
+    
+    $employer = (!strcmp($_user[0]['employer'], '0')) ? false:true;
+    ?>
+            <a style="float:right;" href="logout.php">Logout</a>
+            <a style="float:right;" href="loginpage.php">Welcome<?php echo $_SESSION['name'] ?></a>
+            <?php } else { ?>
+            <a style="float:right;" href="loginpage.php">Login / Signup</a>
+            <?php
+}
 ?>
           </div>
+          <center><h2><font color="#0E276A">
+          <?php
 
-          <center><h2><font color="#0E276A">Browse Jobs</font></h2></center>
+echo (!$employer) ? "Browse Jobs" : "Browse Candidates";
+
+?>
+          </font></h2></center>
 
           <form action="resultspage.php" method="POST">
             <div id="btncontainer">
@@ -135,7 +152,9 @@ if (isset($_SESSION['name'])) {?>
           <br><br>
           <h2></h2>-->
 
-
+<?php
+if(!$employer):
+?>
           <center>
            <div id="leftContainer">
              <input type="text" style = "width: 180%; padding: 8px" placeholder="Expected Salary" name="salary">
@@ -154,7 +173,9 @@ if (isset($_SESSION['name'])) {?>
 
         <br><br>
         <h2></h2>
-
+<?php
+endif;
+?>
         <center>
           <div id="leftContainer">
            <select name="location" style = "width: 250%; padding: 8px" placeholder="Location">
@@ -195,9 +216,9 @@ if (isset($_SESSION['name'])) {?>
      <div id="leftContainer">
       <select name="experience" style = "width: 220%; padding: 8px" placeholder="Years of experience">
         <option value="" disabled selected hidden>Years of Experience</option>
-        <option value="3">0 to 3 Years</option>
-        <option value="5">3 to 5 Years</option>
-        <option value="6">More than 5 Years</option>
+        <option value="1">0 to 3 Years</option>
+        <option value="2">3 to 5 Years</option>
+        <option value="3">More than 5 Years</option>
       </select>
     </div>
 
@@ -219,6 +240,11 @@ if (isset($_SESSION['name'])) {?>
 
 <center>
  <div>
+  <input type="hidden" name="type" value="
+  <?php
+  echo ($employer)?1:2;
+  ?>
+  ">
    <input type="submit" value = "Search" style = "width: 35%; padding: 10px">
    <input type="reset" value = "Reset" style = "background-color: #C0392B; color: white; width: 35%; padding: 10px">
    <br><br>

@@ -74,15 +74,17 @@ $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-/*echo "Connected successfully";*/
 
-/*  echo '<pre>';
-print_r($_POST);
-die();*/
+$type = (isset($_POST['type'])) ? $_POST['type'] : null;
+$type = str_replace(' ', '', $type);
+$type = intval($type);
+
+$type = ($type === 1) ? 'employer' : 'employee';
+
 
 if (isset($_POST['skills'])) {
     $skills = $_POST['skills'];
-    $salary = $_POST['salary'];
+    $salary = (isset($_POST['salary'])) ? $_POST['salary'] : null;
     if (!empty($_POST['location'])) {
         $location = $_POST['location'];
     } else {
@@ -92,9 +94,9 @@ if (isset($_POST['skills'])) {
 
     $preferences    = array();
     $preferences[0] = (isset($_POST['skill_preference'])) ? intval($_POST['skill_preference']) : 0;
-    $preferences[1] = (isset($_POST['salary_preference'])) ? intval($_POST['salary_preference']) : 0;
+    $preferences[1] = (isset($_POST['exp_preference'])) ? intval($_POST['exp_preference']) : 0;
     $preferences[2] = (isset($_POST['location_preference'])) ? intval($_POST['location_preference']) : 0;
-    $preferences[3] = (isset($_POST['exp_preference'])) ? intval($_POST['exp_preference']) : 0;
+    $preferences[3] = (isset($_POST['salary_preference'])) ? intval($_POST['salary_preference']) : 0;
 
     $order = array();
     for ($i = count($preferences) - 1; $i >= 0; $i--) {
@@ -103,12 +105,7 @@ if (isset($_POST['skills'])) {
         $order[]   = $var;
         unset($preferences[$var]);
     }
-    // $columns = ['newline()', 'find_by_salary($data,$salary)', 'find_by_locataion($data,$location)', 'newline()'];
-    /*
-    We want to sort the results of the query  following tis to be sorted by the
-    highest prefrence in the list here
-
-     */
+    
 
 /* echo "SELECT * FROM jobs WHERE (job_title LIKE '%$skills%' OR requirements LIKE '%$skills%' OR job_description LIKE '%$skills%') AND (salary LIKE '%$salary%' AND locations LIKE '%$location%')";
 die(); */
@@ -117,7 +114,13 @@ die(); */
 
     /*$sql = "SELECT * FROM jobs WHERE (skills LIKE '%$skills%' OR skills2 LIKE '%$skills%' OR skills3 LIKE '%$skills%') AND (salary LIKE '%$salary%' AND location LIKE '%$location%' AND experience LIKE '%$experience%')";*/
 
-    $sql        = "SELECT * FROM jobstreet WHERE (job_title LIKE '%$skills%' OR /*requirements LIKE '%$skills%' OR job_*/ description LIKE '%$skills%') ";
+    $sql = "SELECT * FROM ";
+
+    $sql .= (!strcmp($type, "employee")) ?
+    "jobstreet WHERE (job_title LIKE '%$skills%' OR /*requirements LIKE '%$skills%' OR job_*/ description LIKE '%$skills%') "
+    : "users where skills LIKE '%$skills%' ";
+    $sql .= ((!strcmp($type, "employer")) && $experience !== 0) ? "AND experience = $experience" : "";
+    
     $result     = mysqli_query($conn, $sql) or die(mysqli_error($conn));
     $count      = mysqli_num_rows($result);
     $city_found = false;
@@ -127,26 +130,26 @@ die(); */
         while ($row = mysqli_fetch_assoc($result)) {
             $data[] = $row;
         }
-    }
-    foreach ($order as $ind) {
-        if ($ind === 1) {
-            if (!empty($salary)) {
-                $data = find_by_salary($data, $salary);
+        foreach ($order as $ind) {
+            if ($ind === 1) {
+                if (!empty($salary) && $salary !== null) {
+                    $data = find_by_salary($data, $salary);
+                }
+
+            } elseif ($ind === 2) {
+                if (!empty($location)) {
+                    $data = find_by_location($data, $location);
+                }
+
+            } elseif ($ind === 3) {
+                if ($experience !== 0) {
+                    find_by_exp($data, $experience);
+                }
+            } elseif ($ind === 0) {
+                ;
             }
 
-        } elseif ($ind === 2) {
-            if (!empty($location)) {
-                $data = find_by_location($data, $location);
-            }
-
-        } elseif ($ind === 3) {
-            if ($experience !== 0) {
-                find_by_exp($data, $experience);
-            }
-        } elseif ($ind === 0) {
-            ;
         }
-
     }
 
 }
@@ -170,32 +173,56 @@ $conn->close();
 
     <center>
      <?php
-
 if (!empty($data)) {
+
     ?>
        <table style="width:100%; margin-top: 40px;  class="table" cellspacing="1" cellspacing="20" >
         <thead>
           <tr>
-            <th width="25%">Title</th>
-            <th width="25%">Description</th>
-            <th width="25%">Salary</th>
-            <th width="25%">Location</th>
-          </tr>
+
+
+
+<?php
+
+if (!strcmp($type, "employee")) {
+        echo '
+                <th width="25%">Title</th>
+                <th width="25%">Description</th>
+                <th width="25%">Salary</th>
+                <th width="25%">Location</th>
+            </tr>
         </thead>
-
-        <tbody>
-
-          <?php
-foreach ($data as $key => $d) { ?>
-            <tr>
-             <td> <?php echo $d['job_title'] ?> </td>
-             <td> <?php echo $d['description'] ?> </td>
-             <td> <?php echo ($d['salary'] !== 'null') ? $d['salary'] : "Not Specified"; ?> </td>
-             <td> <?php echo $d['location'] ?> </td>
-           </tr>
-         <?php }
+        <tbody>';
+        foreach ($data as $key => $d) {
+            echo "<tr>
+             <td> {$d['job_title']}</td>
+             <td> {$d['description']} </td>
+             <td> ";
+            echo ($d['salary'] !== 'null') ? $d['salary'] : "Not Specified";
+            echo "</td>
+             <td> {$d['location']} </td>
+           </tr>";
+        }
+    } else if (!strcmp($type, "employer")) {
+        echo '
+                <th width="25%">Name</th>
+                <th width="25%">Email</th>
+                <th width="25%">Skills</th>
+                <th width="25%">Address</th>
+            </tr>
+        </thead>
+        <tbody>';
+        foreach ($data as $key => $d) {
+            echo "<tr>
+             <td> {$d['name']}</td>
+             <td> {$d['email']} </td>
+             <td> {$d['skills']} </td>
+             <td> {$d['address']} </td>
+           </tr>";
+        }
+    }
+    
     ?>
-
 
 
        </tbody>
