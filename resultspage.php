@@ -117,7 +117,7 @@ die(); */
     $sql = "SELECT * FROM ";
 
     $sql .= (!strcmp($type, "employee")) ?
-    "jobstreet WHERE (job_title LIKE '%$skills%' OR /*requirements LIKE '%$skills%' OR job_*/ description LIKE '%$skills%') "
+    "jobs WHERE (job_title LIKE '%$skills%' OR /*requirements LIKE '%$skills%' OR job_*/ description LIKE '%$skills%') "
     : "users where skills LIKE '%$skills%' ";
     $sql .= ((!strcmp($type, "employer")) && $experience !== 0) ? "AND experience = $experience" : "";
     
